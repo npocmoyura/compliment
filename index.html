@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07081a" />
+  <title>Ти — мій всесвіт ✨</title>
+
+  <style>
+    :root {
+      --bg: #050611;
+      --violet: #9c6cff;
+      --pink: #ff6eb4;
+      --blue: #55c7ff;
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.72);
+      --glass: rgba(255, 255, 255, 0.09);
+      --glass-border: rgba(255, 255, 255, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow: hidden;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      transition:
+        opacity 0.9s ease,
+        visibility 0.9s ease,
+        transform 0.9s cubic-bezier(.2,.75,.2,1);
+    }
+
+    .screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: scale(1.035);
+    }
+
+    /* -------------------- ЗІРКОВИЙ ФОН -------------------- */
+
+    .space-background,
+    .space-background::before,
+    .space-background::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+    }
+
+    .space-background {
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(128, 91, 255, .22), transparent 28%),
+        radial-gradient(circle at 78% 35%, rgba(54, 170, 255, .17), transparent 28%),
+        radial-gradient(circle at 55% 82%, rgba(255, 75, 170, .13), transparent 30%),
+        linear-gradient(135deg, #040510 0%, #080722 52%, #03040d 100%);
+    }
+
+    .space-background::before {
+      background-image:
+        radial-gradient(circle, white 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(150, 215, 255, .9) 0 1px, transparent 1.7px),
+        radial-gradient(circle, rgba(255, 175, 225, .8) 0 1px, transparent 1.8px);
+      background-position: 0 0, 42px 71px, 88px 32px;
+      background-size: 112px 112px, 147px 147px, 181px 181px;
+      opacity: .55;
+      animation: starsDrift 55s linear infinite;
+    }
+
+    .space-background::after {
+      background:
+        radial-gradient(circle at center, transparent 20%, rgba(2, 3, 11, .25) 65%, rgba(2, 3, 11, .86) 100%);
+    }
+
+    .shooting-star {
+      position: absolute;
+      z-index: 2;
+      width: 160px;
+      height: 1px;
+      top: 16%;
+      left: -220px;
+      transform: rotate(-20deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.9), transparent);
+      filter: drop-shadow(0 0 7px #fff);
+      animation: shooting 8s ease-in-out infinite;
+      opacity: .8;
+      pointer-events: none;
+    }
+
+    .shooting-star.two {
+      top: 68%;
+      animation-delay: 4.7s;
+      animation-duration: 11s;
+      opacity: .45;
+    }
+
+    @keyframes starsDrift {
+      to { transform: translate3d(-110px, 70px, 0); }
+    }
+
+    @keyframes shooting {
+      0%, 58% { transform: translate(-20vw, -10vh) rotate(-20deg); opacity: 0; }
+      62% { opacity: .9; }
+      73% { transform: translate(145vw, 45vh) rotate(-20deg); opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    /* -------------------- ПЕРШИЙ ЕКРАН -------------------- */
+
+    #intro {
+      z-index: 20;
+    }
+
+    .intro-card {
+      position: relative;
+      z-index: 3;
+      width: min(680px, 100%);
+      padding: clamp(34px, 7vw, 72px) clamp(22px, 7vw, 70px);
+      text-align: center;
+      border: 1px solid var(--glass-border);
+      border-radius: 34px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.12), rgba(255,255,255,.045));
+      box-shadow:
+        0 30px 90px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.15);
+      backdrop-filter: blur(19px);
+      -webkit-backdrop-filter: blur(19px);
+      animation: cardFloat 5s ease-in-out infinite;
+    }
+
+    .tiny-label {
+      margin-bottom: 18px;
+      color: #cdbdff;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .intro-card h1 {
+      margin: 0;
+      font-size: clamp(34px, 7.5vw, 68px);
+      line-height: 1.04;
+      letter-spacing: -.045em;
+      text-wrap: balance;
+      text-shadow: 0 0 28px rgba(168, 117, 255, .35);
+    }
+
+    .intro-card h1 span {
+      background: linear-gradient(90deg, #fff, #d8caff 36%, #ffb0d8 72%, #fff);
+      background-size: 200% auto;
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+      animation: shine 5s linear infinite;
+    }
+
+    .intro-card p {
+      max-width: 520px;
+      margin: 22px auto 34px;
+      color: var(--muted);
+      font-size: clamp(18px, 3.7vw, 24px);
+      line-height: 1.55;
+    }
+
+    .next-button {
+      position: relative;
+      overflow: hidden;
+      min-width: 220px;
+      border: 0;
+      border-radius: 999px;
+      padding: 17px 28px;
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+      background: linear-gradient(115deg, var(--violet), var(--pink));
+      box-shadow:
+        0 12px 34px rgba(168, 90, 255, .42),
+        inset 0 1px 0 rgba(255,255,255,.28);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .next-button::before {
+      position: absolute;
+      inset: -80% -30%;
+      content: "";
+      background: linear-gradient(100deg, transparent 35%, rgba(255,255,255,.48), transparent 65%);
+      transform: translateX(-70%) rotate(8deg);
+      animation: buttonGlow 3.4s ease-in-out infinite;
+    }
+
+    .next-button span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .next-button:hover {
+      transform: translateY(-3px) scale(1.025);
+      box-shadow: 0 17px 45px rgba(168, 90, 255, .56);
+    }
+
+    .next-button:active {
+      transform: scale(.98);
+    }
+
+    @keyframes shine {
+      to { background-position: -200% center; }
+    }
+
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes buttonGlow {
+      0%, 55% { transform: translateX(-80%) rotate(8deg); }
+      100% { transform: translateX(80%) rotate(8deg); }
+    }
+
+    /* -------------------- КОСМІЧНИЙ ЕКРАН -------------------- */
+
+    #universe {
+      z-index: 10;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .universe-title {
+      position: absolute;
+      z-index: 8;
+      top: max(22px, env(safe-area-inset-top));
+      left: 50%;
+      width: min(90vw, 700px);
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .universe-title h2 {
+      margin: 0;
+      font-size: clamp(27px, 5vw, 49px);
+      letter-spacing: -.035em;
+      text-shadow: 0 0 30px rgba(170, 120, 255, .58);
+    }
+
+    .universe-title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: clamp(13px, 2.5vw, 17px);
+    }
+
+    .solar-system {
+      position: relative;
+      z-index: 4;
+      width: min(92vw, 790px);
+      aspect-ratio: 1;
+      transform: translateY(4vh);
+    }
+
+    .orbit {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow:
+        0 0 32px rgba(112, 84, 255, .07),
+        inset 0 0 28px rgba(112, 84, 255, .04);
+      pointer-events: none;
+    }
+
+    .orbit::before {
+      position: absolute;
+      inset: -1px;
+      content: "";
+      border-radius: inherit;
+      border-top: 1px solid rgba(146, 105, 255, .42);
+      border-right: 1px solid transparent;
+      transform: rotate(35deg);
+      filter: drop-shadow(0 0 5px rgba(146, 105, 255, .7));
+    }
+
+    .orbit-1 { width: 44%; height: 44%; }
+    .orbit-2 { width: 69%; height: 69%; }
+    .orbit-3 { width: 94%; height: 94%; }
+
+    .planet {
+      position: absolute;
+      z-index: 5;
+      left: 50%;
+      top: 50%;
+      width: clamp(125px, 22vw, 190px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 32% 26%, rgba(255,255,255,.9) 0 2%, transparent 8%),
+        radial-gradient(circle at 65% 70%, rgba(52, 17, 98, .28) 0 15%, transparent 16%),
+        radial-gradient(circle at 55% 40%, #e979d0 0, #8a57ea 37%, #3e2f9e 65%, #17164a 100%);
+      box-shadow:
+        inset -24px -18px 32px rgba(8, 7, 39, .55),
+        inset 14px 10px 24px rgba(255,255,255,.15),
+        0 0 35px rgba(142, 87, 255, .8),
+        0 0 100px rgba(111, 75, 255, .35);
+      animation: planetPulse 4.5s ease-in-out infinite;
+    }
+
+    .planet::before {
+      position: absolute;
+      z-index: -1;
+      left: 50%;
+      top: 50%;
+      width: 155%;
+      height: 37%;
+      content: "";
+      border: clamp(7px, 1.2vw, 12px) solid rgba(231, 187, 255, .6);
+      border-left-color: rgba(110, 118, 255, .85);
+      border-right-color: rgba(255, 132, 204, .82);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) rotate(-13deg);
+      box-shadow: 0 0 18px rgba(197, 135, 255, .28);
+    }
+
+    .planet::after {
+      position: absolute;
+      inset: 0;
+      content: "ТИ";
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      font-size: clamp(26px, 5vw, 44px);
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-indent: .12em;
+      text-shadow: 0 3px 18px rgba(0,0,0,.4);
+    }
+
+    .orbit-track {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--size);
+      height: var(--size);
+      margin-left: calc(var(--size) / -2);
+      margin-top: calc(var(--size) / -2);
+      border-radius: 50%;
+      animation: orbitSpin var(--duration) linear infinite;
+      animation-delay: var(--delay, 0s);
+      pointer-events: none;
+    }
+
+    .orbit-track.reverse {
+      animation-direction: reverse;
+    }
+
+    .memory {
+      position: absolute;
+      z-index: 6;
+      left: 50%;
+      top: 0;
+      width: clamp(64px, 10vw, 92px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      border: 3px solid rgba(255,255,255,.78);
+      border-radius: 50%;
+      overflow: visible;
+      pointer-events: auto;
+      cursor: pointer;
+      box-shadow:
+        0 0 0 5px rgba(159, 109, 255, .14),
+        0 0 28px rgba(136, 92, 255, .62);
+      background: #14152d;
+    }
+
+    .memory img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: inherit;
+      object-fit: cover;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .memory .fallback-photo {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,.27), transparent 27%),
+        linear-gradient(145deg, #a86cff, #ff6eb4);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: .08em;
+    }
+
+    .compliment {
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 9px);
+      width: max-content;
+      max-width: 150px;
+      transform: translateX(-50%);
+      padding: 7px 11px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      color: white;
+      background: rgba(11, 11, 34, .8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 8px 20px rgba(0,0,0,.25);
+      font-size: clamp(10px, 1.8vw, 13px);
+      font-weight: 750;
+      text-align: center;
+      white-space: normal;
+      line-height: 1.2;
+      opacity: .96;
+    }
+
+    .memory > .counter-rotate {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      animation: orbitSpin var(--duration) linear infinite reverse;
+      animation-delay: var(--delay, 0s);
+    }
+
+    .orbit-track.reverse .memory > .counter-rotate {
+      animation-direction: normal;
+    }
+
+    @keyframes orbitSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes planetPulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.035); }
+    }
+
+    .love-note {
+      position: absolute;
+      z-index: 9;
+      bottom: max(20px, env(safe-area-inset-bottom));
+      left: 50%;
+      width: min(88vw, 620px);
+      transform: translateX(-50%);
+      padding: 11px 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 999px;
+      color: rgba(255,255,255,.84);
+      background: rgba(8, 8, 28, .62);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      text-align: center;
+      font-size: clamp(12px, 2.3vw, 15px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+
+    .heart {
+      display: inline-block;
+      animation: heartbeat 1.3s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.18); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.12); }
+      65% { transform: scale(1); }
+    }
+
+    /* Підсвітка фото при натисканні */
+    .memory.active {
+      z-index: 20;
+      box-shadow:
+        0 0 0 6px rgba(255, 131, 201, .22),
+        0 0 48px rgba(255, 106, 191, .95);
+    }
+
+    .memory.active .compliment {
+      transform: translateX(-50%) scale(1.08);
+      background: rgba(95, 38, 123, .92);
+    }
+
+    /* -------------------- МОБІЛЬНА АДАПТАЦІЯ -------------------- */
+
+    @media (max-width: 640px) {
+      .solar-system {
+        width: min(98vw, 590px);
+        transform: translateY(2.5vh);
+      }
+
+      .orbit-1 { width: 47%; height: 47%; }
+      .orbit-2 { width: 72%; height: 72%; }
+      .orbit-3 { width: 96%; height: 96%; }
+
+      .universe-title {
+        top: 18px;
+      }
+
+      .universe-title p {
+        display: none;
+      }
+
+      .love-note {
+        bottom: 14px;
+      }
+
+      .compliment {
+        max-width: 108px;
+        padding: 6px 8px;
+      }
+    }
+
+    @media (max-height: 690px) {
+      .universe-title p,
+      .love-note {
+        display: none;
+      }
+
+      .solar-system {
+        width: min(82vh, 94vw);
+        transform: translateY(5vh);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ПЕРШИЙ ЕКРАН -->
+  <section class="screen" id="intro">
+    <div class="space-background"></div>
+    <div class="shooting-star"></div>
+
+    <main class="intro-card">
+      <div class="tiny-label"></div>
+
+      <h1>
+        Я дуже радий, що ти
+        <span>з’явилась у моєму житті</span>
+      </h1>
+
+      <p>
+        Ти — моє все.<br />
+        І поруч із тобою мій світ став набагато яскравішим.
+      </p>
+
+      <button class="next-button" id="nextButton" type="button">
+        <span>Натискай, не бійся</span>
+      </button>
+    </main>
+  </section>
+
+  <!-- ДРУГИЙ ЕКРАН -->
+  <section class="screen hidden" id="universe">
+    <div class="space-background"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star two"></div>
+
+    <header class="universe-title">
+      <h2>Дякую тобі маленька моя</h2>
+      <p>Твоя присутність - це привід усміхатися кожнго дня.</p>
+    </header>
+
+    <main class="solar-system" id="solarSystem">
+      <div class="orbit orbit-1"></div>
+      <div class="orbit orbit-2"></div>
+      <div class="orbit orbit-3"></div>
+
+      <div class="planet" aria-label="Центральна планета"></div>
+
+      <!-- Фото та компліменти автоматично створюються JavaScript-кодом -->
+    </main>
+
+    <div class="love-note">
+      Ти зробила моє життя особливим <span class="heart">💜</span>
+    </div>
+  </section>
+
+  <script>
+    /*
+      =============================================================
+      ЯК ДОДАТИ СВОЇ ФОТО
+      =============================================================
+      1. Поклади фото поруч із цим файлом, наприклад:
+         photo1.jpg, photo2.jpg, photo3.jpg...
+      2. Нижче заміни значення image на назву потрібного файлу.
+      3. Текст у compliment можеш змінити на будь-який свій.
+    */
+
+    const memories = [
+      {
+        image: "https://i.ibb.co/XxnxNfbW/photo-2026-07-20-01-59-12-5.jpg",
+        compliment: "Ніжна і приємна",
+        orbit: 1,
+        angle: 10
+      },
+      {
+        image: "https://i.ibb.co/xShR0B3N/photo-2026-07-20-01-59-13.jpg",
+        compliment: "Красива та особлива",
+        orbit: 1,
+        angle: 190
+      },
+      {
+        image: "https://i.ibb.co/5Xz6X8HT/photo-2026-07-20-01-59-13-2.jpg",
+        compliment: "Захоплююча і мила",
+        orbit: 2,
+        angle: 55
+      },
+      {
+        image: "https://i.ibb.co/LdBcJd48/photo-2026-07-20-01-59-11.jpg",
+        compliment: "Солоденька",
+        orbit: 2,
+        angle: 175
+      },
+      {
+        image: "https://i.ibb.co/5gqPq0Wh/photo-2026-07-20-01-59-12.jpg",
+        compliment: "Серйозна та інтригуюча",
+        orbit: 2,
+        angle: 295
+      },
+      {
+        image: "https://i.ibb.co/CK672fRf/photo-2026-07-20-01-59-12-2.jpg",
+        compliment: "Шикарна",
+        orbit: 3,
+        angle: 15
+      },
+      {
+        image: "https://i.ibb.co/MkdqXQKj/photo-2026-07-20-01-59-12-4.jpg",
+        compliment: "Дивовижна дівчинка",
+        orbit: 3,
+        angle: 135
+      }
+    ];
+
+    const orbitSettings = {
+      1: { size: "44%", duration: "18s", reverse: false },
+      2: { size: "69%", duration: "28s", reverse: true },
+      3: { size: "94%", duration: "40s", reverse: false }
+    };
+
+    const intro = document.getElementById("intro");
+    const universe = document.getElementById("universe");
+    const nextButton = document.getElementById("nextButton");
+    const solarSystem = document.getElementById("solarSystem");
+
+    nextButton.addEventListener("click", () => {
+      intro.classList.add("hidden");
+      universe.classList.remove("hidden");
+    });
+
+    function createMemory(memory, index) {
+      const settings = orbitSettings[memory.orbit];
+
+      const track = document.createElement("div");
+      track.className = `orbit-track${settings.reverse ? " reverse" : ""}`;
+      track.style.setProperty("--size", settings.size);
+      track.style.setProperty("--duration", settings.duration);
+      track.style.setProperty(
+        "--delay",
+        `-${(parseFloat(settings.duration) * memory.angle / 360).toFixed(2)}s`
+      );
+
+      const memoryEl = document.createElement("div");
+      memoryEl.className = "memory";
+      memoryEl.setAttribute("role", "button");
+      memoryEl.setAttribute("tabindex", "0");
+      memoryEl.setAttribute("aria-label", memory.compliment);
+
+      const counterRotate = document.createElement("div");
+      counterRotate.className = "counter-rotate";
+      counterRotate.style.setProperty("--duration", settings.duration);
+      counterRotate.style.setProperty(
+        "--delay",
+        `-${(parseFloat(settings.duration) * memory.angle / 360).toFixed(2)}s`
+      );
+
+      const image = document.createElement("img");
+      image.src = memory.image;
+      image.alt = `Особливе фото ${index + 1}`;
+
+      image.addEventListener("error", () => {
+        image.remove();
+
+        const fallback = document.createElement("div");
+        fallback.className = "fallback-photo";
+        fallback.textContent = `ФОТО ${index + 1}`;
+
+        counterRotate.prepend(fallback);
+      }, { once: true });
+
+      const compliment = document.createElement("div");
+      compliment.className = "compliment";
+      compliment.textContent = memory.compliment;
+
+      counterRotate.append(image, compliment);
+      memoryEl.append(counterRotate);
+      track.append(memoryEl);
+      solarSystem.append(track);
+
+      const toggleActive = () => {
+        document.querySelectorAll(".memory.active").forEach(item => {
+          if (item !== memoryEl) item.classList.remove("active");
+        });
+        memoryEl.classList.toggle("active");
+      };
+
+      memoryEl.addEventListener("click", toggleActive);
+      memoryEl.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          toggleActive();
+        }
+      });
+    }
+
+    memories.forEach(createMemory);
+  </script>
+</body>
+</html>
